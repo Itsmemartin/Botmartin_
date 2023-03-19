@@ -59,6 +59,60 @@ async def meme(interaction: discord.Interaction):
       await interaction.response.send_message(embed=embed)
 
 
-                                   
+
+#Join Vc (Does Nothing After Joining...Yet)
+@Client.tree.command(name="join", description="Join Vc")
+async def join(interaction: discord.Interaction):
+  channel = interaction.user.voice and interaction.user.voice.channel
+  if not channel:
+    await interaction.response.send_message("Join Vc bruh...")
+    return
+  await interaction.response.send_message("Joining...")
+  await channel.connect()
+
+
+  
+#Leave Vc 
+@Client.tree.command(name="leave", description="Leave Vc")
+async def leave(interaction: discord.Interaction):
+  if interaction.guild.voice_client:
+    await interaction.guild.voice_client.disconnect()
+    await interaction.response.send_message("Leaving...")
+  else:
+    await interaction.response.send_message(
+      "I am not currently connected to a voice channel.")
+
+    
+    
+#Adds sas to your message
+@Client.tree.command(name="clap", description="Claps")
+async def clap(interaction: discord.Interaction, msg: str):
+    split_string = msg.split(" ")
+    result = []
+    for word in split_string:
+        result.extend(list(word))
+    output = ' :clap: '.join(result)
+    await interaction.response.send_message(output)
+    
+    
+    
+#Roast
+@Client.tree.command(name="roast", description="Roast")
+async def roast(interaction: discord.Interaction, who: str):
+    with open('txt_files/adj.txt', 'r') as f:
+        W1 = f.readlines()
+    with open('txt_files/noun.txt', 'r') as g:
+        W2 = g.readlines()
+        
+  f = random.choice(W1).strip().lower()
+  g = random.choice(W2).strip().lower()
+  
+  await interaction.response.send_message(f"{who} is a {f} {g}")
+    
+    
+    
+    
+    
+    
 keep_alive.keep_alive()
-Client.run(os.environ['Botmartin'])
+Client.run(os.environ['Token'])
