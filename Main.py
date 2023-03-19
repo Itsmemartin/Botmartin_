@@ -114,5 +114,5 @@ async def roast(interaction: discord.Interaction, who: str):
     
     
     
-keep_alive.keep_alive()
+
 Client.run(os.environ['Token'])
