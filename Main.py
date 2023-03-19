@@ -25,12 +25,12 @@ async def ping(interaction: discord.Interaction):
 #All channel names and id
 @Client.tree.command(name='channel', description='get all channel names and ids')
 async def channel(interaction: discord.Interaction):
-  hell = Client.get_channel(1045341148752916580)
   await interaction.response.send_message(content='sending names')
   for server in Client.guilds:
+    await interaction.channel.send(content= f"***{server}***")
     for channel in server.channels:
       if str(channel.type) == 'text':
-         await interaction.channel.send(content= f"{channel}: {channel.id}")
+         await interaction.channel.send(content= f"- **{channel}**: *{channel.id}*")
 
 
 
@@ -99,15 +99,15 @@ async def clap(interaction: discord.Interaction, msg: str):
 #Roast
 @Client.tree.command(name="roast", description="Roast")
 async def roast(interaction: discord.Interaction, who: str):
-    with open('txt_files/adj.txt', 'r') as f:
+    with open('adj.txt', 'r') as f:
         W1 = f.readlines()
-    with open('txt_files/noun.txt', 'r') as g:
+    with open('noun.txt', 'r') as g:
         W2 = g.readlines()
         
-  f = random.choice(W1).strip().lower()
-  g = random.choice(W2).strip().lower()
+  W1 = random.choice(W1).strip().lower()
+  W2 = random.choice(W2).strip().lower()
   
-  await interaction.response.send_message(f"{who} is a {f} {g}")
+  await interaction.response.send_message(f"{who} is a {W1} {W2}")
     
     
     
