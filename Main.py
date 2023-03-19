@@ -84,7 +84,7 @@ async def leave(interaction: discord.Interaction):
 
     
     
-#Adds sas to your message
+#Adds sass to your message
 @Client.tree.command(name="clap", description="Claps")
 async def clap(interaction: discord.Interaction, msg: str):
     split_string = msg.split(" ")
