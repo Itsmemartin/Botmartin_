@@ -110,9 +110,75 @@ async def roast(interaction: discord.Interaction, who: str):
   await interaction.response.send_message(f"{who} is a {W1} {W2}")
     
     
+
+    
+#Create Note File
+@Client.tree.command(name="create", description="Create a New Note Repository")
+async def create(interaction: discord.Interaction, pwd: str):
+  fname = f"{interaction.user.name}.txt"
+  if os.path.isfile(fname):
+    await interaction.response.send_message("Repository Already exists.")
+  else:
+    T1 = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(fname, "w") as file:
+      file.write(f'{pwd}\n\n')
+    await interaction.response.send_message(
+      f'Repository Created At: {T1} by: {interaction.user.name}')
     
     
     
+#add note to file WIP
+@Client.tree.command(name="add", description="Add a note")
+async def add(interaction: discord.Interaction):
+  fname = f"{interaction.user.name}.txt"
+
+  with open('file.txt', 'w') as file:
+    file.write(f'{fname}')
+
+  await interaction.response.send_modal(Note())
+
+
+class Note(ui.Modal, title='Add a Note'):
+  pwd = ui.TextInput(label='Password')
+  note = ui.TextInput(label='Write your note',
+                      style=discord.TextStyle.paragraph)
+  date = date.today()
+
+  async def on_submit(self, interaction: discord.Interaction):
+    with open('file.txt', 'r') as file:
+      file_name = file.readline()
+      with open(file_name, 'r') as f:
+        password = f.readline().strip('\n')
+
+    if str(self.pwd) == password:
+      
+
+      with open(file_name, 'a') as f:
+        f.write(f"\n\n{self.date}\n{self.note}")
+      
+      await interaction.response.send_message('Note added', ephemeral=True)
+
+      with open('file.txt', 'r+') as f:
+        f.truncate(0)
+    else:
+
+      await interaction.response.send_message('Wrong Password', ephemeral=True)
+
+      
+#Display the file Wip
+@Client.tree.command(name="view", description="Views your File")
+async def view(interaction: discord.Interaction, password: str):
+  with open(f'{interaction.user.name}.txt', 'r') as f:
+    pwd = f.readline().strip('\n')
+
+  if pwd != password:
+    await interaction.response.send_message('Wrong Password')
+  else:
+    with open(f'{interaction.user.name}.txt', 'r') as f:
+      content = f.readlines()
+    chunks = [content[i:i+2000] for i in range(0, len(content), 2000)]
+    for chunk in chunks:
+      await interaction.response.send_message(f'{chunk}', ephemeral = True)
     
 
 Client.run(os.environ['Token'])
